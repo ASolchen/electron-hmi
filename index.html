@@ -12,11 +12,10 @@
       <div style="width: 30%; float: left;">Disconnected</div>
       <div style="width: 20%; float: left;"><center><button>Connect</button></center></div>
       <div style="width: 20%; float: left;"><center><button>Disconnect</button></center></div>
-      <form action="">
-        Host / IP: <input type="text" name="host" value="127.0.0.1"><br>
-        Port Number: <input type="number" name="port" value="502"><br>
-        Poll Rate (mS): <input type="number" name="rate" value="1000"><br>
-        </form>
+        Host / IP: <input type="text" id="host" value="127.0.0.1"><br>
+        Port Number: <input type="number" id="port" value="502"><br>
+        Poll Rate (mS): <input type="number" id="rate" value="1000"><br>
+
     <div style="overflow: auto; height: 300px"> 
       <table id="tagTable">
         <tr>
@@ -25,26 +24,6 @@
           <th>Data Type</th>
           <th>Value</th>
         </tr>
-        <tr>
-          <td>
-            <select>
-              <option value=0>Coil</option>
-              <option value=1>Input Status</option>
-              <option value=2>Input Register</option>
-              <option value=3>Holding Register</option>
-            </select> 
-          </td>
-          <td><input type="number" value="0"></td>
-          <td>
-            <select>
-              <option value=0>BOOL</option>
-              <option value=1>SINT</option>
-              <option value=2>USINT</option>
-              <option value=3>INT</option>
-            </select>
-          </td>
-          <td>?</td>
-        </tr>
       </table>
     </div>
     <center><button onclick="addRow()">Add Row</button></center>
@@ -52,19 +31,87 @@
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
     <script>
+      let lastFunc = 0;
+      let lastDataType = 0;
+      const functionOptions = ["Coil", "Input Status", "Input Register", "Holding Register"]
+      const dataTypeOptions = [
+        {name: "BOOL", registers: 1},
+        {name: "INT", registers: 1},
+        {name: "DINT", registers: 2},
+        {name: "REAL", registers: 2}
+      ];
+      let docElements = {
+        host: document.getElementById("host"),
+        port: document.getElementById("port"),
+        rate: document.getElementById("rate"),
+        rows: [] //array of the rows as they are added
+      }
+      
+      const setSettingsLock = (locked)=>{//used to lock the settings once the client connects
+        docElements.host.disabled = locked;
+        docElements.port.disabled = locked;
+        docElements.rate.disabled = locked;
+        for(let r in docElements.rows){
+          for(let c=0; c<docElements.rows[r].children.length; c++){
+            console.log(c)
+            docElements.rows[r].children[c].disabled = locked;
+          }
+        }
+      }
+
+      const makeDataTypeSelect = ()=>{
+        let sel = document.createElement("select");
+        for (let op in dataTypeOptions){
+          let option = document.createElement("option")
+          sel.appendChild(option)
+          option.value = op
+          option.innerHTML = dataTypeOptions[op].name
+        }
+        return sel
+      }
+
+      const makeFuncSelect = ()=>{
+        let sel = document.createElement("select");
+        for (let op in functionOptions){
+          let option = document.createElement("option")
+          sel.appendChild(option)
+          option.value = op
+          option.innerHTML = functionOptions[op]
+        }
+        return sel
+      }
+
       const addRow = ()=>{
         const tBody = document.getElementById("tagTable").children[0]
         const idx = tBody.children.length
         console.log(idx)
         const row = document.createElement("tr")
         tBody.append(row)
-        row.id = `tableRow${idx}`
-        const cellText = [`Coil`, `${idx}`, `INT`, `?`]
-        for(let i in cellText){
-          let cell = document.createElement("td")
-          row.appendChild(cell)
-          cell.innerText = cellText[i]
-        }
+        let funcSelect = makeFuncSelect();
+        let addr = document.createElement("input")
+        addr.type = "number"
+        addr.value = 0
+        let dataTypeSelect = makeDataTypeSelect();
+        let tagValue = document.createElement('p')
+        tagValue.innerHTML = "??"
+        docElements.rows.push({
+          row: row,
+          funcSelect: funcSelect,
+          dataTypeSelect: dataTypeSelect,
+          tagValue: tagValue
+        })
+        let td = document.createElement("td")
+        row.appendChild(td)
+        td.appendChild(funcSelect)
+        td = document.createElement("td")
+        row.appendChild(td)
+        td.appendChild(dataTypeSelect)
+        td = document.createElement("td")
+        row.appendChild(td)
+        td.appendChild(addr)
+        td = document.createElement("td")
+        row.appendChild(td)
+        td.appendChild(tagValue)
       }
     </script>
   </body>
