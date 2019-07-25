@@ -1,22 +1,22 @@
 {
-  "name": "electron-quick-start",
+  "name": "electron-hmi",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A minimal Electron HMI",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/ASolchen/electron-hmi",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Modbus",
+    "PLC",
+    "HMI"
   ],
-  "author": "GitHub",
+  "author": "asolchenberger@gmail.com",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^5.0.8"
+    "electron": "^5.0.7",
+    "jsmodbus": "^3.1.3"
   }
 }

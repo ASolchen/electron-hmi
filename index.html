@@ -2,15 +2,70 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <link rel="stylesheet" href="index.css">
+    <title>Hello Controller!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <center><h1>Hello Controller!</h1></center>
+    <div style="width: 100%; overflow: hidden;">
+      <div style="width: 30%; float: left;">Controller Status:</div>
+      <div style="width: 30%; float: left;">Disconnected</div>
+      <div style="width: 20%; float: left;"><center><button>Connect</button></center></div>
+      <div style="width: 20%; float: left;"><center><button>Disconnect</button></center></div>
+      <form action="">
+        Host / IP: <input type="text" name="host" value="127.0.0.1"><br>
+        Port Number: <input type="number" name="port" value="502"><br>
+        Poll Rate (mS): <input type="number" name="rate" value="1000"><br>
+        </form>
+    <div style="overflow: auto; height: 300px"> 
+      <table id="tagTable">
+        <tr>
+          <th>Function Table</th>
+          <th>Address</th>
+          <th>Data Type</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>
+            <select>
+              <option value=0>Coil</option>
+              <option value=1>Input Status</option>
+              <option value=2>Input Register</option>
+              <option value=3>Holding Register</option>
+            </select> 
+          </td>
+          <td><input type="number" value="0"></td>
+          <td>
+            <select>
+              <option value=0>BOOL</option>
+              <option value=1>SINT</option>
+              <option value=2>USINT</option>
+              <option value=3>INT</option>
+            </select>
+          </td>
+          <td>?</td>
+        </tr>
+      </table>
+    </div>
+    <center><button onclick="addRow()">Add Row</button></center>
 
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
+    <script>
+      const addRow = ()=>{
+        const tBody = document.getElementById("tagTable").children[0]
+        const idx = tBody.children.length
+        console.log(idx)
+        const row = document.createElement("tr")
+        tBody.append(row)
+        row.id = `tableRow${idx}`
+        const cellText = [`Coil`, `${idx}`, `INT`, `?`]
+        for(let i in cellText){
+          let cell = document.createElement("td")
+          row.appendChild(cell)
+          cell.innerText = cellText[i]
+        }
+      }
+    </script>
   </body>
 </html>
