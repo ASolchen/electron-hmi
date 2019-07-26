@@ -17,6 +17,7 @@ npm install
 # Run the app
 npm start
 ```
+![screenshot](electron-hmi.png)
 
 Pull requests are welcome.
 

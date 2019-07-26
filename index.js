@@ -5,7 +5,13 @@ const sendToBackend = (signal, payload)=>{
     ipcRenderer.send(signal, JSON.stringify(payload));
 }; 
 
-ipcRenderer.on('tagUpdate', (payload)=>{
+ipcRenderer.on('tagUpdate', (event, payload)=>{
+  const tagVals = JSON.parse(payload);
+  tagVals.map((val, idx)=>{
+    if(docElements.rows[idx]){
+    docElements.rows[idx].tagValue.innerHTML = val
+    }
+  })
 
 })
 
